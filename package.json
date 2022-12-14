@@ -1,0 +1,23 @@
+{
+  "name": "public-channel",
+  "version": "1.0.0",
+  "description": "A game prototype where players work to come up with a secret code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JFamo/public-channel.git"
+  },
+  "author": "Joshua Famous",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JFamo/public-channel/issues"
+  },
+  "homepage": "https://github.com/JFamo/public-channel#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  }
+}
