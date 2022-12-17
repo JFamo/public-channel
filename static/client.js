@@ -13,9 +13,9 @@ for(const [key, value] of Object.entries(elements)){
 // --- Listeners ---
 
 // Room function listeners
-elements["joinRoomButton"].addEventListener('click', joinRoom());
-elements["createRoomButton"].addEventListener('click', createRoom());
-elements["joinDisplayButton"].addEventListener('click', joinDisplay());
+elements["joinRoomButton"].addEventListener('click', joinRoom);
+elements["createRoomButton"].addEventListener('click', createRoom);
+elements["joinDisplayButton"].addEventListener('click', joinDisplay);
 
 // --- Handlers ---
 
