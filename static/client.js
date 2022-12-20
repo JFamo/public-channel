@@ -4,31 +4,26 @@
 // Setup socket and get info
 var socket = io();
 
-// Get HTML elements
-var elementIds = ["joinRoomButton", "createRoomButton", "joinDisplayButton", "nameField", "codeField", "invalidCodeHeader", "roomCodeHeader", "roomPlayerList"];
+// Categorize HTML elements
 var alerts = ["invalidCodeHeader"];
-var elements = {};
-for(id of elementIds){
-    elements[id] = document.getElementById(id);
-}
 
 // --- Listeners ---
 
 // Room function listeners
-elements["joinRoomButton"].addEventListener('click', joinRoom);
-elements["createRoomButton"].addEventListener('click', createRoom);
-elements["joinDisplayButton"].addEventListener('click', joinDisplay);
+$('#joinRoomButton').on('click', joinRoom);
+$('#createRoomButton').on('click', createRoom);
+$('#joinDisplayButton').on('click', joinDisplay);
 
 // --- Handlers ---
 
 // Join room handler
 function joinRoom() {
-    socket.emit('joinRoom', {"name": elements["nameField"].value, "code": elements["codeField"].value});
+    socket.emit('joinRoom', {"name": $('#nameField').val(), "code": $('#codeField').val()});
 }
 
 // Create room handler
 function createRoom() {
-    socket.emit('createRoom', {"name": elements["nameField"].value});
+    socket.emit('createRoom', {"name": $('#nameField').val()});
 }
 
 // Join as display handler
@@ -38,22 +33,24 @@ function joinDisplay() {
 
 // Invalid room handler
 socket.on("invalidRoom", () => {
-    elements["invalidCodeHeader"].style.display = "block";
+    $('#invalidCodeHeader').style.display = "block";
 });
 
 // Room data update handler
 socket.on("roomUpdate", (...data) => {
     // Remove alerts
     for(alertId of alerts){
-        elements[alertId].style.display = "none";
+        document.getElementById(alertId).style.display = "none";
     }
 
     // Display room code
-    elements["roomCodeHeader"].innerHTML = data[1];
+    $('#roomCodeHeader').html(data[1]);
     
     // Display room data
-    elements["roomPlayerList"].innerHTML = "";
+    $('#roomPlayerList').html("");
+    var htmlString = "";
     for(player of data[0]["players"]){
-        elements["roomPlayerList"].innerHTML += player["name"] + "<br>";
+        htmlString += player["name"] + "<br>";
     }
+    $('#roomPlayerList').html(htmlString);
 });

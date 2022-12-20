@@ -2,25 +2,31 @@
 <html>
     <head>
         <title>Public Channel</title>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
-        <h3 id="invalidCodeHeader" style="color:red; display: none;">Invalid Room Code!</h3>
-        <h1>Public Channel Demo</h1>
-        <p>Nickname</p>
-        <input id="nameField" type="text" placeholder="John Doe"/>
-        <p>Room Code</p>
-        <input id="codeField" type="text" placeholder="ABCD"/>
-        <button id="createRoomButton">Create Room</button>
-        <button id="joinRoomButton">Join Room</button>
-        <button id="joinDisplayButton">Join Room as Display</button>
+        <div id="loginDisplay">
+            <h3 id="invalidCodeHeader" style="color:red; display: none;">Invalid Room Code!</h3>
+            <h1>Public Channel Demo</h1>
+            <p>Nickname</p>
+            <input id="nameField" type="text" placeholder="John Doe"/>
+            <p>Room Code</p>
+            <input id="codeField" type="text" placeholder="ABCD"/>
+            <br>
+            <button id="createRoomButton">Create Room</button>
+            <button id="joinRoomButton">Join Room</button>
+            <br>
+            <button id="joinDisplayButton">Join Room as Display</button>
+        </div>
+        
 
-        <div>
+        <div id="waitingDisplay">
             <h3 id="roomCodeHeader"></h3>
             <p id="roomPlayerList"></p>
         </div>
-
     </body>
-
-    <script src="/socket.io/socket.io.js"></script>
+    
     <script src="./client.js"></script>
 </html>
