@@ -8,8 +8,12 @@ function generateRandomRoomCode(){
     return output;
 }
 
+function createRoomData(){
+    return {"players": [], "status": "waiting"};
+}
+
 function createNewPlayerData(name){
     return {"name": name};
 }
 
-module.exports = { generateRandomRoomCode, createNewPlayerData };
+module.exports = { generateRandomRoomCode, createNewPlayerData, createRoomData };

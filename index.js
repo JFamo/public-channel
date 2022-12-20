@@ -49,15 +49,25 @@ socketio.on('connection', (socket) => {
         // Get player name
         var thisName = data[0]["name"];
 
-        // Add code and new room
-        roomData[thisCode] = {"players": [sf.createNewPlayerData(thisName)]};
-        console.log(`Creating a room with code ${thisCode}`);
-        
-        // Add creating user to room
-        socket.join(thisCode);
+        // Check valid name
+        if(thisName.length > 0){
 
-        // Update users in room
-        socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+            // Add code and new room
+            roomData[thisCode] = sf.createRoomData();
+            roomData[thisCode]["players"] = [sf.createNewPlayerData(thisName)];
+            console.log(`Creating a room with code ${thisCode}`);
+            
+            // Add creating user to room
+            socket.join(thisCode);
+
+            // Update users in room
+            socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+
+        }
+        // Handle invalid name
+        else{
+            socket.emit("error", "Invalid name!");
+        }
     });
 
     // Handler for joining an existing room
@@ -67,21 +77,29 @@ socketio.on('connection', (socket) => {
 
         // Check that room exists
         if(thisCode in roomData){
-            // Get player name
-            var thisName = data[0]["name"];
 
-            // Add player to room
-            roomData[thisCode]["players"].push(sf.createNewPlayerData(thisName));
+            // Check if room is open for joining
+            if(roomData[thisCode]["status"] === "waiting"){
+                // Get player name
+                var thisName = data[0]["name"];
 
-            // Add joining user socket to room
-            socket.join(thisCode);
+                // Add player to room
+                roomData[thisCode]["players"].push(sf.createNewPlayerData(thisName));
 
-            // Update users in room
-            socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+                // Add joining user socket to room
+                socket.join(thisCode);
+
+                // Update users in room
+                socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+            }
+            // Handle room in progress
+            else{
+                socket.emit("error", "Room is already in progress!");
+            }
         }   
         // Handle invalid code
         else{
-            socket.emit("invalidRoom");
+            socket.emit("error", "Invalid room code!");
         } 
     });
 });

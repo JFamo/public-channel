@@ -5,7 +5,7 @@
 var socket = io();
 
 // Categorize HTML elements
-var alerts = ["invalidCodeHeader"];
+var alerts = ["errorHeader"];
 
 // --- Listeners ---
 
@@ -32,8 +32,9 @@ function joinDisplay() {
 }
 
 // Invalid room handler
-socket.on("invalidRoom", () => {
-    $('#invalidCodeHeader').style.display = "block";
+socket.on("error", (data) => {
+    $('#errorHeader').css("display", "block");
+    $('#errorHeader').html(data);
 });
 
 // Room data update handler
@@ -42,6 +43,10 @@ socket.on("roomUpdate", (...data) => {
     for(alertId of alerts){
         document.getElementById(alertId).style.display = "none";
     }
+    // Remove login screen
+    document.getElementById("loginDisplay").style.display = "none";
+    // Activate room screen
+    document.getElementById("waitingDisplay").style.display = "block";
 
     // Display room code
     $('#roomCodeHeader').html(data[1]);
@@ -53,4 +58,15 @@ socket.on("roomUpdate", (...data) => {
         htmlString += player["name"] + "<br>";
     }
     $('#roomPlayerList').html(htmlString);
+
+    // Count of players in room (3 necessary)
+    var playerCount = data[0]["players"].length;
+
+    // Open start room function if enough players are in
+    if(playerCount >= 3){
+        document.getElementById("startRoomButton").style.display = "block";
+    }
+    else{
+        document.getElementById("startRoomButton").style.display = "none";
+    }
 });

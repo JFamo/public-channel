@@ -8,7 +8,7 @@
     </head>
     <body>
         <div id="loginDisplay">
-            <h3 id="invalidCodeHeader" style="color:red; display: none;">Invalid Room Code!</h3>
+            <h3 id="errorHeader" style="color:red; display: none;"></h3>
             <h1>Public Channel Demo</h1>
             <p>Nickname</p>
             <input id="nameField" type="text" placeholder="John Doe"/>
@@ -21,10 +21,11 @@
             <button id="joinDisplayButton">Join Room as Display</button>
         </div>
         
-
-        <div id="waitingDisplay">
+        <div id="waitingDisplay" style="display:none;">
             <h3 id="roomCodeHeader"></h3>
             <p id="roomPlayerList"></p>
+            <br>
+            <button id="startRoomButton">Start Game</button>
         </div>
     </body>
     
