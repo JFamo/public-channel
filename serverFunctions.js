@@ -8,4 +8,8 @@ function generateRandomRoomCode(){
     return output;
 }
 
-module.exports = { generateRandomRoomCode };
+function createNewPlayerData(name){
+    return {"name": name};
+}
+
+module.exports = { generateRandomRoomCode, createNewPlayerData };

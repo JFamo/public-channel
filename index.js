@@ -12,7 +12,7 @@ const sf = require("./serverFunctions.js");
 
 // Vars
 const thisPort = 3000;
-var roomCodes = {};
+var roomData = {};
 
 // --- Express Endpoints ---
 
@@ -38,17 +38,51 @@ socketio.on('connection', (socket) => {
     // --- Room Event Handlers ---
 
     // Handler for creating a new room
-    socket.on('createRoom', () => {
+    socket.on('createRoom', (...data) => {
         // Create a unique random code
         var thisCode;
         do{
             thisCode = sf.generateRandomRoomCode();
         }
-        while(thisCode in roomCodes);
+        while(thisCode in roomData);
+
+        // Get player name
+        var thisName = data[0]["name"];
 
         // Add code and new room
-        roomCodes[thisCode] = {players: 1};
+        roomData[thisCode] = {"players": [sf.createNewPlayerData(thisName)]};
         console.log(`Creating a room with code ${thisCode}`);
+        
+        // Add creating user to room
+        socket.join(thisCode);
+
+        // Update users in room
+        socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+    });
+
+    // Handler for joining an existing room
+    socket.on('joinRoom', (...data) => {
+        // Get code
+        var thisCode = data[0]["code"];
+
+        // Check that room exists
+        if(thisCode in roomData){
+            // Get player name
+            var thisName = data[0]["name"];
+
+            // Add player to room
+            roomData[thisCode]["players"].push(sf.createNewPlayerData(thisName));
+
+            // Add joining user socket to room
+            socket.join(thisCode);
+
+            // Update users in room
+            socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+        }   
+        // Handle invalid code
+        else{
+            socket.emit("invalidRoom");
+        } 
     });
 });
 
