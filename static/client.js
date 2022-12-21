@@ -52,6 +52,8 @@ function sendToWaitingRoom(players){
     document.getElementById("loginDisplay").style.display = "none";
     // Activate room screen
     document.getElementById("waitingDisplay").style.display = "block";
+    // Remove game screen
+    document.getElementById("gameCycleDisplay").style.display = "none";
 
     // Display room code
     $('#roomCodeHeader').html(thisCode);
@@ -76,9 +78,44 @@ function sendToWaitingRoom(players){
     }
 }
 
+// Handler for providing Alice/Bob data
+function handleAliceBob(roomData, role){
+    document.getElementById("aliceBobDisplay").style.display = "block";
+    document.getElementById("attackerDisplay").style.display = "none";
+    $("#ab1").attr("src", roomData["channelData"][role][0]);
+    $("#ab2").attr("src", roomData["channelData"][role][1]);
+    $("#ab3").attr("src", roomData["channelData"][role][2]);
+    $("#ab4").attr("src", roomData["channelData"][role][3]);
+}
+
+// Handler for providing attacker data
+function handleAttacker(roomData){
+    document.getElementById("aliceBobDisplay").style.display = "none";
+    document.getElementById("attackerDisplay").style.display = "block";
+    for(var i = 0; i < 20; i ++){
+        $("#att" + (i+1)).attr("src", roomData["channelData"]["all"][i]);
+    }
+}
+
 // Handler for updating the game
 function updateGamePage(roomData){
+    // Remove login screen
+    document.getElementById("loginDisplay").style.display = "none";
+    // Remove room screen
+    document.getElementById("waitingDisplay").style.display = "none";
+    // Activate game screen
+    document.getElementById("gameCycleDisplay").style.display = "block";
 
+    // Check role
+    var myRole = roomData["players"][playerId]["role"];
+
+    // Handle Alice
+    if(myRole == "alice" || myRole == "bob"){
+        handleAliceBob(roomData, myRole);
+    }
+    else{
+        handleAttacker(roomData);
+    }
 }
 
 // Invalid room handler

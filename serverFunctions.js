@@ -66,6 +66,7 @@ function buildImageArrayFromIndices(base, images, ...indices){
 
 function dealCards(someRoomData, categories){
     var basePath = "./static/images";
+    var clientPath = "images";
     var imageCount = 20;
 
     // Choose random category
@@ -75,6 +76,7 @@ function dealCards(someRoomData, categories){
     // Select category directory
     var categoryFolders = fs.readdirSync(basePath);
     var catPath = basePath + "/" + categoryFolders[categoryIndex];
+    clientPath = clientPath + "/" + categoryFolders[categoryIndex];
 
     // Print selected category
     console.log(`Selected category at ${catPath}`);
@@ -97,9 +99,9 @@ function dealCards(someRoomData, categories){
     selectedIndices[4] = getRandomIndex(imageCount);
 
     // Add selections to room data
-    someRoomData["channelData"]["all"] = images;
-    someRoomData["channelData"]["alice"] = buildImageArrayFromIndices(basePath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[3]);
-    someRoomData["channelData"]["bob"] = buildImageArrayFromIndices(basePath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[4]);
+    someRoomData["channelData"]["all"] = buildImageArrayFromIndices(clientPath, images, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19);
+    someRoomData["channelData"]["alice"] = buildImageArrayFromIndices(clientPath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[3]);
+    someRoomData["channelData"]["bob"] = buildImageArrayFromIndices(clientPath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[4]);
 
     // Return updated room data
     return someRoomData;
