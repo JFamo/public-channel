@@ -7,12 +7,16 @@ var socket = io();
 // Categorize HTML elements
 var alerts = ["errorHeader"];
 
+// Current room code
+var thisCode = "";
+
 // --- Listeners ---
 
 // Room function listeners
 $('#joinRoomButton').on('click', joinRoom);
 $('#createRoomButton').on('click', createRoom);
 $('#joinDisplayButton').on('click', joinDisplay);
+$('#startRoomButton').on('click', startRoom);
 
 // --- Handlers ---
 
@@ -31,6 +35,11 @@ function joinDisplay() {
     socket.emit('joinDisplay', {});
 }
 
+// Start a new game handler
+function startRoom() {
+    socket.emit('startRoom', {"code": thisCode});
+}
+
 // Invalid room handler
 socket.on("error", (data) => {
     $('#errorHeader').css("display", "block");
@@ -39,6 +48,10 @@ socket.on("error", (data) => {
 
 // Room data update handler
 socket.on("roomUpdate", (...data) => {
+
+    // Update room code locally
+    thisCode = data[1];
+
     // Remove alerts
     for(alertId of alerts){
         document.getElementById(alertId).style.display = "none";

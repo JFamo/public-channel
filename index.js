@@ -13,6 +13,7 @@ const sf = require("./serverFunctions.js");
 // Vars
 const thisPort = 3000;
 var roomData = {};
+var categories = ["Abstract", "Flags", "Foods", "Furniture", "Shapes", "Tools", "Vehicles"];
 
 // --- Express Endpoints ---
 
@@ -101,6 +102,25 @@ socketio.on('connection', (socket) => {
         else{
             socket.emit("error", "Invalid room code!");
         } 
+    });
+
+    // Handler for starting a room
+    socket.on('startRoom', (...data) => {
+        // Get code
+        var thisCode = data[0]["code"];
+
+        // Update room status for start
+        roomData[thisCode]["status"] = "playing";
+        roomData[thisCode]["round"] = 1;
+
+        // Randomly assign roles
+        roomData[thisCode] = sf.assignRoles(roomData[thisCode]);
+
+        // Choose random images
+        roomData[thisCode] = sf.dealCards(roomData[thisCode], categories);
+
+        // Print selection
+        console.log(roomData);
     });
 });
 
