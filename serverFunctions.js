@@ -25,15 +25,16 @@ function generateRandomPlayerId(){
 }
 
 function createRoomData(){
-    return {"players": [], "status": "waiting", "round": 0, "submissions": [], "channelData": {}};
+    return {"players": {}, "status": "waiting", "round": 0, "submissions": [], "channelData": {}};
 }
 
 function createNewPlayerData(name){
-    return {"id": generateRandomPlayerId(), "name": name, "role":"attacker"};
+    return [generateRandomPlayerId(), {"name": name, "role":"attacker"}];
 }
 
 function assignRoles(someRoomData){
-    var playerCount = someRoomData["players"].length;
+    var playerIds = Object.keys(someRoomData["players"]);
+    var playerCount = playerIds.length;
     var aliceIndex = getRandomIndex(playerCount);
     var bobIndex;
     do{
@@ -42,13 +43,13 @@ function assignRoles(someRoomData){
 
     for(var i = 0; i < playerCount; i ++){
         if(i == aliceIndex){
-            someRoomData["players"][i]["role"] = "alice";
+            someRoomData["players"][playerIds[i]]["role"] = "alice";
         }
         else if(i == bobIndex){
-            someRoomData["players"][i]["role"] = "bob";
+            someRoomData["players"][playerIds[i]]["role"] = "bob";
         }
         else{
-            someRoomData["players"][i]["role"] = "attacker";
+            someRoomData["players"][playerIds[i]]["role"] = "attacker";
         }
     }
 
@@ -99,10 +100,6 @@ function dealCards(someRoomData, categories){
     someRoomData["channelData"]["all"] = images;
     someRoomData["channelData"]["alice"] = buildImageArrayFromIndices(basePath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[3]);
     someRoomData["channelData"]["bob"] = buildImageArrayFromIndices(basePath, images, selectedIndices[0], selectedIndices[1], selectedIndices[2], selectedIndices[4]);
-
-    console.log(someRoomData["channelData"]["all"]);
-    console.log(someRoomData["channelData"]["alice"]);
-    console.log(someRoomData["channelData"]["bob"]);
 
     // Return updated room data
     return someRoomData;

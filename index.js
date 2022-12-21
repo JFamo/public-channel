@@ -55,11 +55,16 @@ socketio.on('connection', (socket) => {
 
             // Add code and new room
             roomData[thisCode] = sf.createRoomData();
-            roomData[thisCode]["players"] = [sf.createNewPlayerData(thisName)];
+            var newPlayer = sf.createNewPlayerData(thisName);
+            roomData[thisCode]["players"][newPlayer[0]] = newPlayer[1];
+
             console.log(`Creating a room with code ${thisCode}`);
             
             // Add creating user to room
             socket.join(thisCode);
+
+            // Send player their uid
+            socket.emit("playerId", newPlayer[0]);
 
             // Update users in room
             socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
@@ -85,10 +90,15 @@ socketio.on('connection', (socket) => {
                 var thisName = data[0]["name"];
 
                 // Add player to room
-                roomData[thisCode]["players"].push(sf.createNewPlayerData(thisName));
+                var newPlayer = sf.createNewPlayerData(thisName);
+                // Set players at this new ID to the new player object
+                roomData[thisCode]["players"][newPlayer[0]] = newPlayer[1];
 
                 // Add joining user socket to room
                 socket.join(thisCode);
+
+                // Send player their uid
+                socket.emit("playerId", newPlayer[0]);
 
                 // Update users in room
                 socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
@@ -119,8 +129,8 @@ socketio.on('connection', (socket) => {
         // Choose random images
         roomData[thisCode] = sf.dealCards(roomData[thisCode], categories);
 
-        // Print selection
-        console.log(roomData);
+        // Send room update with round
+        socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
     });
 });
 
