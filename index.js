@@ -149,14 +149,14 @@ socketio.on('connection', (socket) => {
                 var thisRound = roomData[thisCode]["round"];
 
                 // DEBUG
-                console.log(thisRole + " submitted " + thisPath + " for round " + thisRound);
+                console.log(thisRole + " [" + thisPlayer + " ] submitted " + thisPath + " for round " + thisRound);
 
                 // Add submission for round
                 if(thisRound in roomData[thisCode]["submissions"]){
-                    roomData[thisCode]["submissions"][thisRound][thisRole] = thisPath;
+                    roomData[thisCode]["submissions"][thisRound][thisPlayer] = thisPath;
                 }
                 else{
-                    roomData[thisCode]["submissions"][thisRound] = {thisRole: thisPath};
+                    roomData[thisCode]["submissions"][thisRound] = {thisPlayer: thisPath};
                 }
 
                 // Check for round end
@@ -166,12 +166,22 @@ socketio.on('connection', (socket) => {
 
                     // Handle end of round
                     roomData[thisCode]["round"] += 1;
-                    roomData[thisCode] = sf.dealCards(roomData[thisCode], categories);
+                    
+                    // Handle end of game
+                    if(roomData[thisCode]["round"] >= 5){
 
-                    // TODO handle end of game
+                        socketio.to(thisCode).emit("gameEnd", sf.buildResults(roomData[thisCode]));
 
-                    // Send room update with round
-                    socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+                    }
+                    else{
+
+                        // If continuing, assign new cards and category
+                        roomData[thisCode] = sf.dealCards(roomData[thisCode], categories);
+
+                        // Send room update with round
+                        socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+
+                    }
 
                 }
 

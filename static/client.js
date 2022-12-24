@@ -153,3 +153,8 @@ socket.on("roomUpdate", (...data) => {
 socket.on("playerId", (data) => {
     playerId = data;
 });
+
+// Handler for end of game data
+socket.on("gameEnd", (data) => {
+    console.log(JSON.stringify(data));
+});

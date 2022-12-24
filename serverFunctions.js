@@ -24,6 +24,25 @@ function generateRandomPlayerId(){
     return output;
 }
 
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function fisherYatesShuffle(array){
+    let currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}
+
 function createRoomData(){
     return {"players": {}, "status": "waiting", "round": 0, "submissions": {}, "channelData": {}};
 }
@@ -61,6 +80,7 @@ function buildImageArrayFromIndices(base, images, ...indices){
     for(index of indices){
         out.push(base + "/" + images[index]);
     }
+    out = fisherYatesShuffle(out);
     return out;
 }
 
@@ -107,4 +127,87 @@ function dealCards(someRoomData, categories){
     return someRoomData;
 }
 
-module.exports = { generateRandomRoomCode, createNewPlayerData, createRoomData, assignRoles, dealCards };
+function getPlayerRole(someRoomData, playerId){
+    return someRoomData["players"][playerId]["role"];
+}
+
+function getPlayerNickname(someRoomData, playerId){
+    return someRoomData["players"][playerId]["name"];
+}
+
+function getRolePlayerId(someRoomData, role){
+    var playerKeys = Object.keys(someRoomData["players"]);
+    for(let i = 0; i < playerKeys.length; i ++){
+        if(getPlayerRole(someRoomData, playerKeys[i]) == role){
+            return playerKeys[i];
+        }
+    }
+    return 0;
+}
+
+// Function to assess the game and build a results object
+function buildResults(someRoomData){
+
+    // Setup vars
+    var results = {"agreement": true, "compromised": false, "paths": {}, "crackers": []};
+    var roundKeys = Object.keys(someRoomData["submissions"]);
+    var matches = [];
+
+    var aliceId = getRolePlayerId(someRoomData, "alice");
+    var bobId = getRolePlayerId(someRoomData, "bob");
+
+    // Iterate rounds
+    for(let i = 0; i < roundKeys.length; i ++){
+
+        var thisRound = someRoomData["submissions"][roundKeys[i]];
+
+        // Check for alice/bob mismatch
+        if(thisRound[aliceId] != thisRound[bobId]){
+            results["agreement"] = false;
+        }
+
+        // Iterate players
+        for(const [playerId, submission] of Object.entries(thisRound)){
+
+            // Build or add to object for this player's submissions
+            if(playerId in results["paths"]){
+                results["paths"][playerId]["images"].push(submission);
+            }
+            else{
+                results["paths"][playerId] = {"name": getPlayerNickname(someRoomData, playerId), "role": getPlayerRole(someRoomData, playerId), "images": [submission]};
+            }
+
+            // Check for attackers with a match
+            if(playerId != aliceId && playerId != bobId){
+
+                // On first round, add to matches if this attacker has a match
+                if(i <= 0){
+                    if(submission == thisRound[aliceId]){
+                        matches.push(playerId);
+                    }
+                }
+                // On other rounds, remove if not matching
+                else{
+                    if(submission != thisRound[aliceId]){
+                        matches = matches.filter(id => id != playerId);
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    // After all rounds, check for complete attacker matches
+    if(matches.length > 0){
+        results["compromised"] = true;
+        results["crackers"] = matches;
+    }
+
+    // Return results to be sent to clients
+    return results;
+
+}
+
+module.exports = { generateRandomRoomCode, createNewPlayerData, createRoomData, assignRoles, dealCards, buildResults };
