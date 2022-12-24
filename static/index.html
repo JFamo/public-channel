@@ -32,35 +32,57 @@
             <h3 id="roomCodeHeader"></h3>
             <p>This is the main game cycle</p>
             <div id="aliceBobDisplay">
-                <img id="ab1" src="" width="40%" height="40%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="ab2" src="" width="40%" height="40%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="ab3" src="" width="40%" height="40%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="ab4" src="" width="40%" height="40%" style="border:1px solid black; border-radius: 2px;"/>
+                <input type="image" id="ab1" src=""  class="alicebobImage"/>
+                <input type="image" id="ab2" src=""  class="alicebobImage"/>
+                <input type="image" id="ab3" src=""  class="alicebobImage"/>
+                <input type="image" id="ab4" src=""  class="alicebobImage"/>
             </div>
             <div id="attackerDisplay">
-                <img id="att1" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att2" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att3" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att4" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att5" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att6" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att7" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att8" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att9" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att10" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att11" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att12" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att13" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att14" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att15" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att16" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att17" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att18" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att19" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
-                <img id="att20" src="" width="16%" height="16%" style="border:1px solid black; border-radius: 2px;"/>
+                <input type="image" id="att1" src=""  class="attackerImage"/>
+                <input type="image" id="att2" src=""  class="attackerImage"/>
+                <input type="image" id="att3" src=""  class="attackerImage"/>
+                <input type="image" id="att4" src=""  class="attackerImage"/>
+                <input type="image" id="att5" src=""  class="attackerImage"/>
+                <input type="image" id="att6" src=""  class="attackerImage"/>
+                <input type="image" id="att7" src=""  class="attackerImage"/>
+                <input type="image" id="att8" src=""  class="attackerImage"/>
+                <input type="image" id="att9" src=""  class="attackerImage"/>
+                <input type="image" id="att10" src=""  class="attackerImage"/>
+                <input type="image" id="att11" src=""  class="attackerImage"/>
+                <input type="image" id="att12" src=""  class="attackerImage"/>
+                <input type="image" id="att13" src=""  class="attackerImage"/>
+                <input type="image" id="att14" src=""  class="attackerImage"/>
+                <input type="image" id="att15" src=""  class="attackerImage"/>
+                <input type="image" id="att16" src=""  class="attackerImage"/>
+                <input type="image" id="att17" src=""  class="attackerImage"/>
+                <input type="image" id="att18" src=""  class="attackerImage"/>
+                <input type="image" id="att19" src=""  class="attackerImage"/>
+                <input type="image" id="att20" src=""  class="attackerImage"/>
             </div>
         </div>
     </body>
     
     <script src="./client.js"></script>
+
+    <style>
+        #aliceBobDisplay{
+            text-align: center;
+        }
+        #attackerDisplay{
+            text-align: center;
+        }
+        .attackerImage{
+            border: 1px solid black;
+            border-radius: 2px;
+            margin:1rem;
+            width: 25%;
+            height: auto;
+        }
+        .alicebobImage{
+            border: 1px solid black;
+            border-radius: 2px;
+            margin:1rem;
+            width: 45%;
+        }
+    </style>
 </html>

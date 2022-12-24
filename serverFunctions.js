@@ -25,7 +25,7 @@ function generateRandomPlayerId(){
 }
 
 function createRoomData(){
-    return {"players": {}, "status": "waiting", "round": 0, "submissions": [], "channelData": {}};
+    return {"players": {}, "status": "waiting", "round": 0, "submissions": {}, "channelData": {}};
 }
 
 function createNewPlayerData(name){

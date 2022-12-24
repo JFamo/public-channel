@@ -42,6 +42,11 @@ function startRoom() {
     socket.emit('startRoom', {"code": thisCode});
 }
 
+// Submit an image selection handler
+function submitImage(role, selectionPath){
+    socket.emit('imageSelection', {"code": thisCode, "path": selectionPath, "player": playerId, "role": role});
+}
+
 // Handler for changing from login page to waiting room
 function sendToWaitingRoom(players){
     // Remove alerts
@@ -82,10 +87,11 @@ function sendToWaitingRoom(players){
 function handleAliceBob(roomData, role){
     document.getElementById("aliceBobDisplay").style.display = "block";
     document.getElementById("attackerDisplay").style.display = "none";
-    $("#ab1").attr("src", roomData["channelData"][role][0]);
-    $("#ab2").attr("src", roomData["channelData"][role][1]);
-    $("#ab3").attr("src", roomData["channelData"][role][2]);
-    $("#ab4").attr("src", roomData["channelData"][role][3]);
+    for(var i = 0; i < 4; i ++){
+        $("#ab" + (i+1)).attr("src", roomData["channelData"][role][i]);
+        $("#ab" + (i+1)).off();
+        $("#ab" + (i+1)).on('click', function(){ submitImage(role, roomData["channelData"][role][i]) });
+    }
 }
 
 // Handler for providing attacker data
@@ -94,6 +100,8 @@ function handleAttacker(roomData){
     document.getElementById("attackerDisplay").style.display = "block";
     for(var i = 0; i < 20; i ++){
         $("#att" + (i+1)).attr("src", roomData["channelData"]["all"][i]);
+        $("#att" + (i+1)).off();
+        $("#att" + (i+1)).on('click', function(){ submitImage("attacker", roomData["channelData"]["all"][i]) });
     }
 }
 

@@ -132,6 +132,52 @@ socketio.on('connection', (socket) => {
         // Send room update with round
         socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
     });
+
+    // Handler for receiving submitted images from users
+    socket.on('imageSelection', (...data) => {
+        // Get data
+        var thisCode = data[0]["code"];
+        var thisPlayer = data[0]["player"];
+        var thisRole = data[0]["role"];
+        var thisPath = data[0]["path"];
+
+        // Ensure this is not old data
+        if(thisCode in roomData){
+            if(roomData[thisCode]["status"] == "playing"){
+
+                // Get current round
+                var thisRound = roomData[thisCode]["round"];
+
+                // DEBUG
+                console.log(thisRole + " submitted " + thisPath + " for round " + thisRound);
+
+                // Add submission for round
+                if(thisRound in roomData[thisCode]["submissions"]){
+                    roomData[thisCode]["submissions"][thisRound][thisRole] = thisPath;
+                }
+                else{
+                    roomData[thisCode]["submissions"][thisRound] = {thisRole: thisPath};
+                }
+
+                // Check for round end
+                var submissionCountForRound = Object.keys(roomData[thisCode]["submissions"][thisRound]).length;
+                var playersInRoom = Object.keys(roomData[thisCode]["players"]).length;
+                if(submissionCountForRound >= playersInRoom){
+
+                    // Handle end of round
+                    roomData[thisCode]["round"] += 1;
+                    roomData[thisCode] = sf.dealCards(roomData[thisCode], categories);
+
+                    // TODO handle end of game
+
+                    // Send room update with round
+                    socketio.to(thisCode).emit("roomUpdate", roomData[thisCode], thisCode);
+
+                }
+
+            }
+        }
+    });
 });
 
 // Setup server listening
