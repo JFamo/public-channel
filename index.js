@@ -11,7 +11,7 @@ const socketio = new Server(server);
 const sf = require("./serverFunctions.js");
 
 // Vars
-const thisPort = 3000;
+const thisPort = process.env.PORT || 3000;
 var roomData = {};
 var categories = ["Abstract", "Flags", "Foods", "Furniture", "Shapes", "Tools", "Vehicles"];
 
