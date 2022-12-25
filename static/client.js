@@ -43,8 +43,8 @@ function startRoom() {
 }
 
 // Submit an image selection handler
-function submitImage(role, selectionPath){
-    socket.emit('imageSelection', {"code": thisCode, "path": selectionPath, "player": playerId, "role": role});
+function submitImage(e){
+    socket.emit('imageSelection', {"code": thisCode, "path": e.data.path, "player": playerId, "role": e.data.role});
 }
 
 // Handler for changing from login page to waiting room
@@ -90,7 +90,7 @@ function handleAliceBob(roomData, role){
     for(var i = 0; i < 4; i ++){
         $("#ab" + (i+1)).attr("src", roomData["channelData"][role][i]);
         $("#ab" + (i+1)).off();
-        $("#ab" + (i+1)).on('click', function(){ submitImage(role, roomData["channelData"][role][i]) });
+        $("#ab" + (i+1)).on('click', {"role": role, "path": roomData["channelData"][role][i]}, submitImage);
     }
 }
 
@@ -101,7 +101,7 @@ function handleAttacker(roomData){
     for(var i = 0; i < 20; i ++){
         $("#att" + (i+1)).attr("src", roomData["channelData"]["all"][i]);
         $("#att" + (i+1)).off();
-        $("#att" + (i+1)).on('click', function(){ submitImage("attacker", roomData["channelData"]["all"][i]) });
+        $("#att" + (i+1)).on('click', {"role": "attacker", "path": roomData["channelData"]["all"][i]}, submitImage);
     }
 }
 
@@ -113,6 +113,8 @@ function updateGamePage(roomData){
     document.getElementById("waitingDisplay").style.display = "none";
     // Activate game screen
     document.getElementById("gameCycleDisplay").style.display = "block";
+    // Remove final screen
+    document.getElementById("gameEndDisplay").style.display = "none";
 
     // Check role
     var myRole = roomData["players"][playerId]["role"];
@@ -157,4 +159,44 @@ socket.on("playerId", (data) => {
 // Handler for end of game data
 socket.on("gameEnd", (data) => {
     console.log(JSON.stringify(data));
+
+    // Remove login screen
+    document.getElementById("loginDisplay").style.display = "none";
+    // Remove room screen
+    document.getElementById("waitingDisplay").style.display = "none";
+    // Remove game screen
+    document.getElementById("gameCycleDisplay").style.display = "none";
+    // Activate final screen
+    document.getElementById("gameEndDisplay").style.display = "block";
+
+    // Show header
+    var gameEndText = "";
+    if(!data["agreement"]){
+        gameEndText = "Attackers Win! Alice and Bob failed to establish a shared code.";
+    }
+    else if(data["compromised"]){
+        gameEndText = "Attackers Win! Alice and Bob's secret code was cracked.";
+    }   
+    else{
+        gameEndText = "Alice and Bob Win! The attackers could not decipher their shared code.";
+    }
+    $('#gameEndTitle').html(gameEndText);
+
+    // Iterate players to show their selections
+    $('#gameEndDisplays').html("");
+    var playerIds = Object.keys(data["paths"]);
+    for(let i = 0; i < playerIds.length; i ++){
+        var thisPlayer = data["paths"][playerIds[i]];
+
+        // Create new section with header
+        var thisSection = `<div><h4 class="playerSectionHeader">${thisPlayer["name"]} (${thisPlayer["role"].toUpperCase()})</h4>`;
+        thisSection += `<img src="${thisPlayer["images"][0]}" class="finalImage"/>`;
+        thisSection += `<img src="${thisPlayer["images"][1]}" class="finalImage"/>`;
+        thisSection += `<img src="${thisPlayer["images"][2]}" class="finalImage"/>`;
+        thisSection += `<img src="${thisPlayer["images"][3]}" class="finalImage"/>`;
+        thisSection += `</div>`;
+
+        // Append Section
+        $('#gameEndDisplays').append(thisSection);
+    }
 });

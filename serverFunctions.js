@@ -169,6 +169,9 @@ function buildResults(someRoomData){
         // Iterate players
         for(const [playerId, submission] of Object.entries(thisRound)){
 
+            // DEBUG
+            console.log(`Evaluating ${playerId} with ${submission} out of ${JSON.stringify(someRoomData)}`);
+
             // Build or add to object for this player's submissions
             if(playerId in results["paths"]){
                 results["paths"][playerId]["images"].push(submission);

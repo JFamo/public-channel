@@ -149,14 +149,15 @@ socketio.on('connection', (socket) => {
                 var thisRound = roomData[thisCode]["round"];
 
                 // DEBUG
-                console.log(thisRole + " [" + thisPlayer + " ] submitted " + thisPath + " for round " + thisRound);
+                console.log(thisRole + " [" + thisPlayer + "] submitted " + thisPath + " for round " + thisRound);
 
                 // Add submission for round
                 if(thisRound in roomData[thisCode]["submissions"]){
                     roomData[thisCode]["submissions"][thisRound][thisPlayer] = thisPath;
                 }
                 else{
-                    roomData[thisCode]["submissions"][thisRound] = {thisPlayer: thisPath};
+                    roomData[thisCode]["submissions"][thisRound] = {};
+                    roomData[thisCode]["submissions"][thisRound][thisPlayer] = thisPath;
                 }
 
                 // Check for round end
