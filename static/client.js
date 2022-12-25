@@ -77,14 +77,18 @@ function sendToWaitingRoom(players){
     // Open start room function if enough players are in
     if(playerCount >= 3){
         document.getElementById("startRoomButton").style.display = "block";
+        document.getElementById("waitingToStartText").style.display = "none";
     }
     else{
         document.getElementById("startRoomButton").style.display = "none";
+        document.getElementById("waitingToStartText").style.display = "block";
     }
 }
 
 // Handler for providing Alice/Bob data
 function handleAliceBob(roomData, role){
+    var otherRole = role == "alice" ? "BOB" : "ALICE";
+    $("#roleText").html(`You are ${role.toUpperCase()}. Your mission is to collaborate with ${otherRole} to choose the same images without revealing to the ATTACKERs which image you chose.`);
     document.getElementById("aliceBobDisplay").style.display = "block";
     document.getElementById("attackerDisplay").style.display = "none";
     for(var i = 0; i < 4; i ++){
@@ -96,6 +100,7 @@ function handleAliceBob(roomData, role){
 
 // Handler for providing attacker data
 function handleAttacker(roomData){
+    $("#roleText").html(`You are an ATTACKER. Your mission is to choose the same image that ALICE and BOB have selected.`);
     document.getElementById("aliceBobDisplay").style.display = "none";
     document.getElementById("attackerDisplay").style.display = "block";
     for(var i = 0; i < 20; i ++){

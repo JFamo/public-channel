@@ -7,30 +7,36 @@
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
+        <div style="width:100%;">
+            <img style="padding-top:0.5rem; padding-left:0.5rem; width:30vw; height:auto;" src="publicChannelLogo.png" />
+        </div>
         <div id="loginDisplay">
             <h3 id="errorHeader" style="color:red; display: none;"></h3>
             <h1>Public Channel Demo</h1>
             <p>Nickname</p>
-            <input id="nameField" type="text" placeholder="John Doe"/>
+            <input id="nameField" type="text" placeholder="John Doe" class="inputForm"/>
             <p>Room Code</p>
-            <input id="codeField" type="text" placeholder="ABCD"/>
+            <input id="codeField" type="text" placeholder="ABCD" class="inputForm"/>
             <br>
-            <button id="createRoomButton">Create Room</button>
-            <button id="joinRoomButton">Join Room</button>
+            <button id="createRoomButton" class="menuButton">Create Room</button>
+            <button id="joinRoomButton" class="menuButton">Join Room</button>
             <br>
-            <button id="joinDisplayButton">Join Room as Display</button>
+            <button id="joinDisplayButton" class="menuButton" disabled>Join Room as Display</button>
         </div>
         
         <div id="waitingDisplay" style="display:none;">
-            <h3 id="roomCodeHeader"></h3>
+            <h1 id="roomCodeHeader"></h1>
+            <h3>Lobby</h3>
+            <div style="width:100%; height:4px; background-color:#8BD2F5;"></div>
             <p id="roomPlayerList"></p>
             <br>
-            <button id="startRoomButton">Start Game</button>
+            <p id="waitingToStartText">This game needs at least 3 players to start...</p>
+            <button id="startRoomButton" class="menuButton">Start Game</button>
         </div>
 
         <div id="gameCycleDisplay" style="display:none;">
             <h3 id="roomCodeHeader"></h3>
-            <p>This is the main game cycle</p>
+            <p id="roleText" style="width:100%; text-align:center; font-size:24px;"></p>
             <div id="aliceBobDisplay">
                 <input type="image" id="ab1" src=""  class="alicebobImage"/>
                 <input type="image" id="ab2" src=""  class="alicebobImage"/>
@@ -70,6 +76,17 @@
     <script src="./client.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chivo+Mono&display=swap');
+        html{
+            font-family: 'Chivo Mono', monospace;
+            padding:2rem;
+            font-size: 30px;
+            background-color: #111;
+            color: #eee;
+        }
+        #loginDisplay{
+            text-align:center;
+        }
         #aliceBobDisplay{
             text-align: center;
         }
@@ -77,24 +94,54 @@
             text-align: center;
         }
         .attackerImage{
-            border: 1px solid black;
+            border: 1px solid #8BD2F5;
             border-radius: 2px;
-            margin:1rem;
-            width: 25%;
+            margin:1.5rem;
+            width: 30%;
             height: auto;
         }
+        .attackerImage:active{
+            border: 1px solid #4472B0;
+            margin:0rem;
+            width: calc(30% + 1.5rem);
+        }
         .alicebobImage{
-            border: 1px solid black;
+            border: 1px solid #8BD2F5;
             border-radius: 2px;
             margin:1rem;
             width: 45%;
         }
+        .alicebobImage:active{
+            border: 1px solid #4472B0;
+            margin:0rem;
+            width: calc(45% + 1rem);
+        }
         .finalImage{
             width:20%;
             height:auto;
-            border:1px solid blue;
+            border:1px solid #4472B0;
             border-radius: 2px;
             margin:20px;
+        }
+        .inputForm{
+            width:80%;
+            font-size:xxx-large;
+            padding:1rem;
+        }
+        .menuButton{
+            width:80%;
+            font-size:xxx-large;
+            padding:1rem;
+            border-radius:10px;
+            background-color: #4472B0;
+            color:#eee;
+            font-family: 'Chivo Mono', monospace;
+            text-align:center;
+            transition: 0.2s all;
+            margin-top:1rem;
+        }
+        .menuButton:active{
+            background-color: #8BD2F5;
         }
     </style>
 </html>
